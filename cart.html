@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon - Shopping Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .cart-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        .cart-items {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .cart-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #131921;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FF9900;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            align-items: flex-start;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 120px;
+            height: 120px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            flex-shrink: 0;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #131921;
+            margin-bottom: 8px;
+        }
+
+        .item-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #B12704;
+            margin-bottom: 10px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .quantity-control button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #FF9900;
+        }
+
+        .quantity-control button:hover {
+            color: #FFA724;
+        }
+
+        .remove-btn {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #0066c0;
+            font-size: 12px;
+            transition: background-color 0.3s;
+        }
+
+        .remove-btn:hover {
+            background-color: #fee;
+            color: #c33;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-cart-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .continue-shopping {
+            background-color: #FF9900;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        .continue-shopping:hover {
+            background-color: #FFA724;
+        }
+
+        /* Cart Summary */
+        .cart-summary {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #131921;
+            margin-bottom: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-total {
+            font-size: 18px;
+            font-weight: bold;
+            color: #B12704;
+            border-top: 2px solid #ddd;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF9900;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #FFA724;
+        }
+
+        .checkout-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: static;
+            }
+
+            .cart-item {
+                flex-direction: column;
+            }
+
+            .item-image {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <a href="index.html" class="logo">amazon</a>
+        <div style="flex: 1;"></div>
+        <div class="header-nav">
+            <a href="login.html" class="nav-item">Account</a>
+            <a href="cart.html" class="nav-item cart-icon">🛒 Cart</a>
+        </div>
+    </div>
+
+    <!-- Cart Container -->
+    <div class="cart-container">
+        <div class="cart-items" id="cartItems">
+            <div class="cart-title">Shopping Cart</div>
+            <!-- Cart items will be populated here -->
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🛒</div>
+                <div class="empty-cart-text">Your Amazon Cart is empty</div>
+                <a href="index.html" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <div class="summary-title">Price Summary</div>
+
+            <div class="summary-row">
+                <span>Subtotal:</span>
+                <span id="subtotal">$0.00</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Shipping:</span>
+                <span id="shipping">FREE</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Tax:</span>
+                <span id="tax">$0.00</span>
+            </div>
+
+            <div class="summary-row summary-total">
+                <span>Order Total:</span>
+                <span id="total">$0.00</span>
+            </div>
+
+            <button class="checkout-btn" id="checkoutBtn" disabled>Proceed to Checkout</button>
+
+            <p style="font-size: 12px; color: #666; margin-top: 15px; text-align: center;">
+                Free delivery on orders over $50
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Sample cart items (in a real app, this would come from localStorage or a database)
+        const sampleCartItems = [
+            {
+                id: 1,
+                name: 'Premium Wireless Earbuds',
+                price: 54.99,
+                icon: '📱',
+                quantity: 1
+            },
+            {
+                id: 2,
+                name: 'USB-C Hub Adapter',
+                price: 29.99,
+                icon: '💻',
+                quantity: 2
+            }
+        ];
+
+        function displayCart() {
+            const cartContainer = document.getElementById('cartItems');
+
+            if (sampleCartItems.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="cart-title">Shopping Cart</div>
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <div class="empty-cart-text">Your Amazon Cart is empty</div>
+                        <a href="index.html" class="continue-shopping">Continue Shopping</a>
+                    </div>
+                `;
+                document.getElementById('checkoutBtn').disabled = true;
+                return;
+            }
+
+            let cartHTML = '<div class="cart-title">Shopping Cart</div>';
+
+            sampleCartItems.forEach(item => {
+                cartHTML += `
+                    <div class="cart-item">
+                        <div class="item-image">${item.icon}</div>
+                        <div class="item-details">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-price">$${item.price.toFixed(2)}</div>
+                            <div class="item-actions">
+                                <div class="quantity-control">
+                                    <button onclick="decreaseQuantity(${item.id})">−</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="increaseQuantity(${item.id})">+</button>
+                                </div>
+                                <button class="remove-btn" onclick="removeItem(${item.id})">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            cartContainer.innerHTML = cartHTML;
+            document.getElementById('checkoutBtn').disabled = false;
+            updateSummary();
+        }
+
+        function updateSummary() {
+            let subtotal = sampleCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            let tax = subtotal * 0.08;
+            let total = subtotal + tax;
+
+            document.getElementById('subtotal').textContent = '$' + subtotal.toFixed(2);
+            document.getElementById('tax').textContent = '$' + tax.toFixed(2);
+            document.getElementById('total').textContent = '$' + total.toFixed(2);
+        }
+
+        function increaseQuantity(id) {
+            const item = sampleCartItems.find(i => i.id === id);
+            if (item) {
+                item.quantity++;
+                displayCart();
+            }
+        }
+
+        function decreaseQuantity(id) {
+            const item = sampleCartItems.find(i => i.id === id);
+            if (item && item.quantity > 1) {
+                item.quantity--;
+                displayCart();
+            }
+        }
+
+        function removeItem(id) {
+            const index = sampleCartItems.findIndex(i => i.id === id);
+            if (index > -1) {
+                sampleCartItems.splice(index, 1);
+                displayCart();
+            }
+        }
+
+        document.getElementById('checkoutBtn').addEventListener('click', function() {
+            if (sampleCartItems.length > 0) {
+                alert('Proceeding to checkout...\n\nOrder Total: ' + document.getElementById('total').textContent);
+            }
+        });
+
+        // Display cart on page load
+        displayCart();
+    </script>
+</body>
+</html>
